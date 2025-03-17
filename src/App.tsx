@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Navbar from "./components/Navbar"
 import Questions from "./components/Questions"
+import Button from "./components/Button"
 
 function App() {
   const [isStarted, setIsStarted]= useState<boolean>(false)
@@ -11,12 +12,10 @@ function App() {
       {!isStarted ? 
         <div className="flex flex-col justify-center items-center h-screen gap-12">
           <h1 className="text-9xl">Mood Song</h1>
-          <button 
-            className="border py-1 px-4 cursor-pointer"
-            onClick={()=> setIsStarted(true)}
-            >
-              Get started
-          </button>
+          <Button 
+            text="Get Started"
+            onClick={()=> setIsStarted(true)}>
+          </Button>
         </div>
         :
         <Questions onBack={()=>setIsStarted(false)}/>
