@@ -2,12 +2,13 @@ import { useState } from "react"
 import Navbar from "./components/Navbar"
 import Questions from "./components/Questions"
 import Button from "./components/Button"
+import AppContext from "./utils/AppContext.ts"
 
 function App() {
-  const [isStarted, setIsStarted]= useState<boolean>(false)
+  const [isStarted, setIsStarted]= useState(false)
 
   return (
-    <>
+    <AppContext.Provider value={{ isStarted, setIsStarted }}>
       <Navbar />
       {!isStarted ? 
         <div className="flex flex-col justify-center items-center h-screen gap-12">
@@ -20,7 +21,7 @@ function App() {
         :
         <Questions onBack={()=>setIsStarted(false)}/>
       }
-    </>
+    </AppContext.Provider>
   )
 }
 
