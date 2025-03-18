@@ -1,5 +1,5 @@
 import Button from "./Button";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import AppContext from "../utils/AppContext";
 
 
@@ -7,9 +7,10 @@ interface ChooseCategoryProps{
     onNext: ()=> void,
     categories: {title: string, active:boolean, emotions: string[]}[],
     onSelectCategory: (index:number)=> void,
+    disableBtn: boolean
 }
 
-const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext, categories, onSelectCategory})=>{
+const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext, categories, onSelectCategory, disableBtn})=>{
     const {setIsStarted} =useContext(AppContext)
     const handleBack= ()=>{
         setIsStarted(false)
@@ -35,7 +36,7 @@ const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext, categories, onSe
                     text="Back"
                     onClick={handleBack}>
                 </Button>
-                <Button text="Next" onClick={onNext}></Button>
+                <Button isDisable={disableBtn} text="Next" onClick={onNext}></Button>
             </div>
         </div>
     )

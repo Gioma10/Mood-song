@@ -17,6 +17,7 @@ const Questions: React.FC = ()=>{
         emotions: [], 
     })
     
+    // Categoria selezionata 
     const handleSelectCategory= (index: number )=>{
         setCategories(prevCategories =>
             prevCategories.map((category, i) => ({
@@ -26,9 +27,12 @@ const Questions: React.FC = ()=>{
         );
     }
     
-    const selectedCategory  = categories.filter((category)=> category.active && category.title)
+    const selectedCategory  = categories.filter((category)=> category.active && category.title);
+    const isSelected = selectedCategory.length > 0
     // console.log(selectedCategory);
 
+
+    // Prossima domanda 
     const handleNext= ()=>{
         setIsNext(prevNext => !prevNext);
         setAnswer(prevAnswer =>{
@@ -38,16 +42,26 @@ const Questions: React.FC = ()=>{
             }
         })
     }
-
+    console.log(answer);
+    
+    //Funzione salvataggio risposte
+    const handleGenerate = (selectedEmotions: string[] )=>{
+        setAnswer(prevAnswer =>{
+            return {
+                ...prevAnswer,
+                emotions: selectedEmotions,
+            }
+        })
+    }
     console.log(answer);
     
 
     return (
         <main className="h-screen flex justify-center items-center">
             {!isNext ? 
-                <ChooseCategory onSelectCategory={handleSelectCategory} categories={categories} onNext={handleNext}/>
+                <ChooseCategory disableBtn={!isSelected} onSelectCategory={handleSelectCategory} categories={categories} onNext={handleNext}/>
                 :
-                <ChooseEmotions onNext={handleNext} emotions={selectedCategory[0].emotions}/>
+                <ChooseEmotions onGenerate={handleGenerate} onNext={handleNext} emotions={selectedCategory[0].emotions}/>
             }
         </main>
     )
