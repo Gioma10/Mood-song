@@ -1,31 +1,16 @@
 import Button from "./Button";
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import AppContext from "../utils/AppContext";
-import { ANSWERQUESTIONS } from "../utils/answerQuestions";
+
 
 interface ChooseCategoryProps{
-    onNext: ()=> void
+    onNext: ()=> void,
+    categories: {title: string, active:boolean, emotions: string[]}[],
+    onSelectCategory: (index:number)=> void,
 }
 
-const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext})=>{
+const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext, categories, onSelectCategory})=>{
     const {setIsStarted} =useContext(AppContext)
-
-    const [categories, setCategories]= useState<{title: string, active:boolean}[]>([
-            {title: 'positivy', active: false },
-            {title: 'negativy', active: false },
-            {title: 'neutral', active: false },
-            {title: 'variable', active: false },
-            ])
-
-    const handleSelectCategory= (index: number, title: string )=>{
-        setCategories(prevCategories =>
-            prevCategories.map((category, i) => ({
-                ...category,
-                active: i === index, // Solo l'elemento cliccato diventa attivo
-            }))
-        );
-    }
-
     const handleBack= ()=>{
         setIsStarted(false)
     }
@@ -39,7 +24,7 @@ const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext})=>{
                         <div 
                             key={index} 
                             className={`border ${category.active && 'border-[#7D3C98]'} p-20 text-4xl cursor-pointer `}
-                            onClick={()=>handleSelectCategory(index, category.title)}>
+                            onClick={()=>onSelectCategory(index)}>
                             <p>{category.title}</p>
                         </div>
                     )
