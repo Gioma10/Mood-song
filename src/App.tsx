@@ -19,7 +19,7 @@ function App() {
           </Button>
         </div>
         :
-        <Questions onBack={()=>setIsStarted(false)}/>
+        <Questions/>
       }
     </AppContext.Provider>
   )
