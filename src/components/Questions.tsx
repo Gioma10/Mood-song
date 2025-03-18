@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import Button from "./Button"
 
 interface QuestionsProps{
     onBack: ()=> void
@@ -41,12 +42,11 @@ const Questions: React.FC<QuestionsProps> = ({onBack})=>{
                     })}
                 </div>
                 <div className="flex gap-6">
-                    <button 
-                        className="border py-1 px-4 cursor-pointer"
+                    <Button 
+                        text="Back"
                         onClick={onBack}>
-                            back
-                    </button>
-                    <button className="border py-1 px-4 cursor-pointer">Next</button>
+                    </Button>
+                    <Button text="Next" onClick={onBack}></Button>
                 </div>
             </div>
         </main>
