@@ -1,70 +1,57 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ChooseCategory from "./ChooseCategory";
 import ChooseEmotions from "./ChooseEmotions";
+import GenerateResult from "./GenerateResult";
 import { ANSWERQUESTIONS } from "../utils/answerQuestions";
 
-interface answerObject{
-    category: string,
-    emotions: string[],
+interface AnswerObject {
+    category: string;
+    emotions: string[];
 }
 
-const Questions: React.FC = ()=>{
-    const [isNext, setIsNext]= useState<boolean>(false)
-    const [categories, setCategories]= useState<{title: string, active:boolean, emotions: string[]}[]>(ANSWERQUESTIONS);
-    const [answer, setAnswer]= useState<answerObject>({
-        category: '',
-        emotions: [], 
-    })
-    
-    // Categoria selezionata 
-    const handleSelectCategory= (index: number )=>{
+const Questions: React.FC = () => {
+    const [step, setStep] = useState<number>(0); // 0: categoria, 1: emozioni, 2: risultato
+    const [categories, setCategories] = useState<{ title: string; active: boolean; emotions: string[] }[]>(ANSWERQUESTIONS);
+    const [answer, setAnswer] = useState<AnswerObject>({ category: "", emotions: [] });
+
+    // Selezione categoria
+    const handleSelectCategory = (index: number) => {
         setCategories(prevCategories =>
             prevCategories.map((category, i) => ({
                 ...category,
                 active: i === index, // Solo l'elemento cliccato diventa attivo
             }))
         );
-    }
-    
-    const selectedCategory  = categories.filter((category)=> category.active && category.title);
-    const isSelected = selectedCategory.length > 0
-    // console.log(selectedCategory);
+    };
 
+    const selectedCategory = categories.find(category => category.active);
+    const isSelected = !!selectedCategory;
 
-    // Prossima domanda 
-    const handleNext= ()=>{
-        setIsNext(prevNext => !prevNext);
-        setAnswer(prevAnswer =>{
-            return {
-                ...prevAnswer,
-                category: selectedCategory[0].title
-            }
-        })
-    }
-    console.log(answer);
-    
-    //Funzione salvataggio risposte
-    const handleGenerate = (selectedEmotions: string[] )=>{
-        setAnswer(prevAnswer =>{
-            return {
-                ...prevAnswer,
-                emotions: selectedEmotions,
-            }
-        })
-    }
-    console.log(answer);
-    
+    // Passa alla prossima schermata
+    const handleNext = () => {
+        if (step === 0 && selectedCategory) {
+            setAnswer(prevAnswer => ({ ...prevAnswer, category: selectedCategory.title }));
+        }
+        setStep(prevStep => prevStep + 1);
+    };
+
+    // Salvataggio emozioni
+    const handleGenerate = (selectedEmotions: string[]) => {
+        setAnswer(prevAnswer => ({ ...prevAnswer, emotions: selectedEmotions }));
+        handleNext();
+    };
 
     return (
         <main className="h-screen flex justify-center items-center">
-            {!isNext ? 
-                <ChooseCategory disableBtn={!isSelected} onSelectCategory={handleSelectCategory} categories={categories} onNext={handleNext}/>
-                :
-                <ChooseEmotions onGenerate={handleGenerate} onNext={handleNext} emotions={selectedCategory[0].emotions}/>
-            }
+            {step === 0 && (
+                <ChooseCategory disableBtn={!isSelected} onSelectCategory={handleSelectCategory} categories={categories} onNext={handleNext} />
+            )}
+            {step === 1 && selectedCategory && (
+                <ChooseEmotions onGenerate={handleGenerate} onNext={handleNext} emotions={selectedCategory.emotions} />
+            )}
+            {step === 2 && <GenerateResult answer={answer} />}
         </main>
-    )
-}
+    );
+};
 
 export default Questions;
