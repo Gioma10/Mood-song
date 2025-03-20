@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { getSpotifyToken } from "./utils/spotifyService"; // Assicurati che il percorso sia corretto
+import { getSpotifyToken } from "./utils/spotifyService"; // Assicurati che questa funzione funzioni correttamente
+import axios from "axios";
+import { BiCategory } from "react-icons/bi";
 
 interface Song {
     id: string;
     name: string;
     artists: { name: string }[];
-    preview_url: string | null;
     external_urls: { spotify: string };
 }
 
@@ -16,63 +17,90 @@ interface Props {
     };
 }
 
-const GENRE_MAP: { [key: string]: string[] } = {
-    "Pop e Commerciale": ["pop", "dance-pop", "synth-pop", "k-pop"],
-    "Rock e Derivati": ["classic-rock", "hard-rock", "indie-rock", "grunge"],
-    "Rap e Hip-Hop": ["hip-hop", "trap", "drill", "lo-fi"],
-    "Elettronica e Dance": ["edm", "house", "techno", "dubstep"],
-    "Classica e Strumentale": ["classical", "instrumental"],
-};
-
-const CATEGORY_TO_GENRE: { [key: string]: string } = {
-    negativity: "Rock e Derivati",
-    positivity: "Pop e Commerciale",
-    neutral: "Elettronica e Dance",
-    variable: "Rap e Hip-Hop",
-};
-
-
 const GenerateResult: React.FC<Props> = ({ answer }) => {
-    const [songsByGenre, setSongsByGenre] = useState<{ [key: string]: Song[] }>({});
+    const [songs, setSongs] = useState<Song[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+
+    // Genera il prompt per OpenAI
+    const generateMusicPrompt = (category: string, emotions: string[]) => {
+        console.log(emotions);
+        return `Suggerisci una lista di 5-10 canzoni basate su queste emozioni: ${emotions.join(", ")}. Il mood generale è ${category}. Restituisci solo i titoli delle canzoni separati da virgola, senza numerazione o altro testo.`;
+    };
+
+    console.log('VITE_OPENAI_API_KEY:', import.meta.env.VITE_OPENAI_API_KEY);
 
     useEffect(() => {
         const fetchSongs = async () => {
             setLoading(true);
             try {
-                const token = await getSpotifyToken();
-                if (!token) {
-                    console.error("Token Spotify non ottenuto!");
-                    setLoading(false);
+                const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+                console.log(import.meta.env.VITE_OPENAI_API_KEY);
+
+                // 1️⃣ Chiamata API a OpenAI per ottenere titoli delle canzoni
+                const openAiResponse = await axios.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    {
+                        model: "gpt-4",
+                        messages: [
+                            { role: "system", content: "Sei un AI esperto in musica." },
+                            { role: "user", content: generateMusicPrompt(answer.category, answer.emotions) },
+                        ],
+                        max_tokens: 100,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${apiKey}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+
+                const aiGeneratedContent: string = openAiResponse.data.choices[0]?.message?.content || "";
+                const aiGeneratedSongs: string[] = aiGeneratedContent
+                    .split(",") // Dividiamo per virgola invece che per "\n"
+                    .map(song => song.trim())
+                    .filter(song => song !== "");
+
+                console.log("Titoli generati:", aiGeneratedSongs);
+
+                if (aiGeneratedSongs.length === 0) {
+                    setSongs([]);
                     return;
                 }
-                const mappedGenre = CATEGORY_TO_GENRE[answer.category] || null; // Prende il genere associato alla categoria
-                const selectedGenres = mappedGenre ? GENRE_MAP[mappedGenre] : [];
-                
-                let genreResults: { [key: string]: Song[] } = {};
 
-                for (const genre of selectedGenres) {
-                    const searchUrl = `https://api.spotify.com/v1/search?q=genre:"${genre}"&type=track&limit=10`;
+                // 2️⃣ Otteniamo il token Spotify
+                const spotifyToken = await getSpotifyToken();
+                if (!spotifyToken) {
+                    console.error("Errore nel recupero del token Spotify.");
+                    setSongs([]);
+                    return;
+                }
 
-                    const response = await fetch(searchUrl, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
+                // 3️⃣ Cerchiamo ogni canzone su Spotify
+                const fetchedSongs: Song[] = [];
 
-                    if (!response.ok) {
-                        console.error(`Errore API Spotify (${genre}):`, response.status);
-                        continue;
-                    }
+                for (const songTitle of aiGeneratedSongs) {
+                    const searchResponse = await axios.get(
+                        `https://api.spotify.com/v1/search`,
+                        {
+                            params: {
+                                q: songTitle,
+                                type: "track",
+                                limit: 1,
+                            },
+                            headers: {
+                                Authorization: `Bearer ${spotifyToken}`,
+                            },
+                        }
+                    );
 
-                    const data = await response.json();
-
-                    if (data.tracks && data.tracks.items) {
-                        genreResults[genre] = data.tracks.items;
+                    const tracks = searchResponse.data.tracks.items;
+                    if (tracks.length > 0) {
+                        fetchedSongs.push(tracks[0]); // Aggiungiamo il primo risultato valido
                     }
                 }
 
-                setSongsByGenre(genreResults);
+                setSongs(fetchedSongs);
             } catch (error) {
                 console.error("Errore nel recupero delle canzoni:", error);
             } finally {
@@ -84,46 +112,36 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
     }, [answer]);
 
     return (
-        <div className="p-6 text-white bg-black min-h-screen w-screen">
-            <h2 className="text-3xl font-bold mb-6 text-center">Risultati per: {answer.category}</h2>
+        <div className="p-6 text-white bg-black min-h-screen w-screen mt-7">
+            <h2 className="text-3xl font-bold mb-6 text-center">
+                Risultati per: {answer.category}
+            </h2>
             {loading ? (
                 <p className="text-center text-lg">Caricamento...</p>
             ) : (
                 <div className="space-y-8">
-                    {Object.entries(songsByGenre).map(([genre, songs]) => (
-                        <div key={genre} className="border-b pb-6">
-                            <h3 className="text-2xl font-semibold mb-4">{genre.toUpperCase()}</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {songs.length > 0 ? (
-                                    songs.map(song => (
-                                        <div key={song.id} className="border p-4 rounded-lg shadow-md bg-gray-900">
-                                            <h4 className="font-semibold text-lg">{song.name}</h4>
-                                            <p className="text-sm text-gray-400">
-                                                {song.artists.map(artist => artist.name).join(", ")}
-                                            </p>
-                                            {song.preview_url ? (
-                                                <audio controls className="mt-2 w-full">
-                                                    <source src={song.preview_url} type="audio/mpeg" />
-                                                    Il tuo browser non supporta l'elemento audio.
-                                                </audio>
-                                            ) : (
-                                                <p className="text-sm text-gray-500">Anteprima non disponibile</p>
-                                            )}
-                                            <a
-                                                href={song.external_urls.spotify}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-400 block mt-2 hover:underline">
-                                                 Ascolta su Spotify
-                                            </a>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-gray-400">Nessuna canzone trovata per questo genere.</p>
-                                )}
-                            </div>
+                    {songs.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {songs.map((song) => (
+                                <div key={song.id} className="border p-4 rounded-lg shadow-md bg-gray-900">
+                                    <h4 className="font-semibold text-lg">{song.name}</h4>
+                                    <p className="text-sm text-gray-400">
+                                        {song.artists.map((artist) => artist.name).join(", ")}
+                                    </p>
+                                    <a
+                                        href={song.external_urls.spotify}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-400 block mt-2 hover:underline"
+                                    >
+                                        🎵 Ascolta su Spotify
+                                    </a>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        <p className="text-gray-400 text-center">Nessuna canzone trovata.</p>
+                    )}
                 </div>
             )}
         </div>
