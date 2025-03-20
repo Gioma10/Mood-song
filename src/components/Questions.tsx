@@ -40,7 +40,7 @@ const Questions: React.FC = () => {
         setAnswer(prevAnswer => ({ ...prevAnswer, emotions: selectedEmotions }));
         handleNext();
     };
-
+    
     return (
         <main className="h-screen flex justify-center items-center">
             {step === 0 && (

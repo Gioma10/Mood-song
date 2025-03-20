@@ -24,6 +24,14 @@ const GENRE_MAP: { [key: string]: string[] } = {
     "Classica e Strumentale": ["classical", "instrumental"],
 };
 
+const CATEGORY_TO_GENRE: { [key: string]: string } = {
+    negativity: "Rock e Derivati",
+    positivity: "Pop e Commerciale",
+    neutral: "Elettronica e Dance",
+    variable: "Rap e Hip-Hop",
+};
+
+
 const GenerateResult: React.FC<Props> = ({ answer }) => {
     const [songsByGenre, setSongsByGenre] = useState<{ [key: string]: Song[] }>({});
     const [loading, setLoading] = useState<boolean>(true);
@@ -38,8 +46,9 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                     setLoading(false);
                     return;
                 }
-
-                const selectedGenres = GENRE_MAP[answer.category] || [];
+                const mappedGenre = CATEGORY_TO_GENRE[answer.category] || null; // Prende il genere associato alla categoria
+                const selectedGenres = mappedGenre ? GENRE_MAP[mappedGenre] : [];
+                
                 let genreResults: { [key: string]: Song[] } = {};
 
                 for (const genre of selectedGenres) {
