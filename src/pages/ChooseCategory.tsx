@@ -1,20 +1,13 @@
-import Button from "./Button";
-import React, { useContext } from "react";
-import AppContext from "../utils/AppContext";
-
+import Button from "../components/Button";
+import React from "react";
 
 interface ChooseCategoryProps{
-    onNext: ()=> void,
     categories: {title: string, active:boolean, emotions: string[]}[],
     onSelectCategory: (index:number)=> void,
     disableBtn: boolean
 }
 
-const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext, categories, onSelectCategory, disableBtn})=>{
-    const {setIsStarted} =useContext(AppContext)
-    const handleBack= ()=>{
-        setIsStarted(false)
-    }
+const ChooseCategory: React.FC<ChooseCategoryProps> = ({ categories, onSelectCategory, disableBtn})=>{
 
     return (
         <div className="flex flex-col justify-center items-center gap-32">
@@ -32,11 +25,8 @@ const ChooseCategory: React.FC<ChooseCategoryProps> = ({onNext, categories, onSe
                 })}
             </div>
             <div className="flex gap-6">
-                <Button 
-                    text="Back"
-                    onClick={handleBack}>
-                </Button>
-                <Button isDisable={disableBtn} text="Next" onClick={onNext}></Button>
+                <Button path="/" text="Back" />
+                <Button path="/choose-emotions" isDisable={disableBtn} text="Next" />
             </div>
         </div>
     )

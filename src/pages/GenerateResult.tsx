@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getSpotifyToken } from "./utils/spotifyService"; // Assicurati che il percorso sia corretto
+import { getSpotifyToken } from "../components/utils/spotifyService"; // Assicurati che il percorso sia corretto
 
 interface Song {
     id: string;

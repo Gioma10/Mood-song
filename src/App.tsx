@@ -1,27 +1,49 @@
-import { useState } from "react"
-import Navbar from "./components/Navbar"
-import Questions from "./components/Questions"
-import Button from "./components/Button"
-import AppContext from "./utils/AppContext.ts"
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./layout/RootLayout";
+import Home from "./pages/Home";
+import ChooseEmotions from "./pages/ChooseEmotions";
+import ChooseCategory from "./pages/ChooseCategory";
+import GenerateResult from "./pages/GenerateResult";
+import { ANSWERQUESTIONS } from "./utils/answerQuestions";
 
 function App() {
-  const [isStarted, setIsStarted]= useState(false)
+  const [categories, setCategories] = useState<{ title: string; active: boolean; emotions: string[] }[]>(ANSWERQUESTIONS);
+  const [answer, setAnswer] = useState<string[]>([]);
+  
+      // Selezione categoria
+      const handleSelectCategory = (index: number) => {
+          setCategories(prevCategories =>
+              prevCategories.map((category, i) => ({
+                  ...category,
+                  active: i === index, // Solo l'elemento cliccato diventa attivo
+              }))
+          );
+      };
+  
+      const selectedCategory = categories.find(category => category.active);
+      const isSelected = !!selectedCategory;
+
+  
+      // Salvataggio emozioni
+      const handleGenerate = (selectedEmotions: string[]) => {
+          setAnswer([...selectedEmotions]);
+      };
+
+      console.log(answer);
+      
 
   return (
-    <AppContext.Provider value={{ isStarted, setIsStarted }}>
-      <Navbar />
-      {!isStarted ? 
-        <div className="flex flex-col justify-center items-center h-screen gap-12">
-          <h1 className="text-9xl">Mood Song</h1>
-          <Button 
-            text="Get Started"
-            onClick={()=> setIsStarted(true)}>
-          </Button>
-        </div>
-        :
-        <Questions/>
-      }
-    </AppContext.Provider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="/choose-category" element={<ChooseCategory disableBtn={!isSelected} onSelectCategory={handleSelectCategory} categories={categories}  />} />
+          {selectedCategory && <Route path="/choose-emotions" element={<ChooseEmotions onGenerate={handleGenerate} emotions={selectedCategory.emotions}/>} />}
+          <Route path="/result-generate" element={<GenerateResult answer={answer}/>} />
+        </Route>
+      </Routes>
+    </Router>
   )
 }
 
