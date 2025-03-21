@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { getSpotifyToken } from "../components/utils/spotifyService"; // Assicurati che il percorso sia corretto
+=======
+import { useEffect, useState } from "react";
+// import { getSpotifyToken } from "../components/utils/spotifyService";
+// import { fetchOpenAIPrompt } from "../components/utils/openAIService";
+>>>>>>> pages
 
 interface Song {
     id: string;
@@ -23,6 +29,7 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
         const fetchSongs = async () => {
             setLoading(true);
             try {
+<<<<<<< HEAD
                 const token = await getSpotifyToken();
                 if (!token) {
                     console.error("Token Spotify non ottenuto!");
@@ -54,6 +61,11 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 if (data.tracks && data.tracks.items) {
                     setSongsByEmotion(data.tracks.items); // Aggiungi i risultati
                 }
+=======
+                // console.log(getSpotifyToken);
+                // const promptResponse = await fetchOpenAIPrompt(answer) || [];
+                // setSongs(Array.isArray(promptResponse) ? promptResponse : []);
+>>>>>>> pages
             } catch (error) {
                 console.error("Errore nel recupero delle canzoni:", error);
             } finally {

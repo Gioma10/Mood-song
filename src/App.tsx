@@ -7,9 +7,14 @@ import ChooseCategory from "./pages/ChooseCategory";
 import GenerateResult from "./pages/GenerateResult";
 import { ANSWERQUESTIONS } from "./utils/answerQuestions";
 
+interface AnswerObject {
+  emotions: string[],
+  songsQuantity: string | number,
+}
+
 function App() {
   const [categories, setCategories] = useState<{ title: string; active: boolean; emotions: string[] }[]>(ANSWERQUESTIONS);
-  const [answer, setAnswer] = useState<string[]>([]);
+  const [answer, setAnswer] = useState<AnswerObject>();
   
       // Selezione categoria
       const handleSelectCategory = (index: number) => {
@@ -26,13 +31,11 @@ function App() {
 
   
       // Salvataggio emozioni
-      const handleGenerate = (selectedEmotions: string[]) => {
-          setAnswer([...selectedEmotions]);
-          console.log(setAnswer);
+      const handleGenerate = (selectedEmotions: string[], quantity: string | number) => {
+          setAnswer({emotions: [...selectedEmotions], songsQuantity: quantity});
       };
 
       console.log(answer);
-      
 
   return (
     <Router>
