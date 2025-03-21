@@ -28,6 +28,7 @@ function App() {
       // Salvataggio emozioni
       const handleGenerate = (selectedEmotions: string[]) => {
           setAnswer([...selectedEmotions]);
+          console.log(setAnswer);
       };
 
       console.log(answer);
