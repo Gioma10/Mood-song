@@ -1,10 +1,11 @@
 const CLIENT_ID = "b14f6338cb6b46e18ea4606bf036be0a";
 const CLIENT_SECRET = "9d45591edd07405bbb4f6b0609b856d3";
 
-export const getSpotifyToken = async (): Promise<string | null> => {
+export const getSpotifyToken = async (promptResponse: { name: string; artist: string; }[]): Promise<string | null> => {
     const authUrl = "https://accounts.spotify.com/api/token"; // URL corretto
 
     try {
+        console.log(promptResponse);
         const response = await fetch(authUrl, {
             method: "POST",
             headers: {

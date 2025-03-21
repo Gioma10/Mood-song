@@ -1,14 +1,15 @@
 import React, {useState} from "react";
-import Button from "./Button";
+import Button from "../components/Button";
 
 interface ChooseEmotionsProps{
-    emotions: string[],
-    onNext: ()=> void,
+    emotions: string[] ,
+    // onNext: ()=> void,
     onGenerate: (selectedEmotions:string[]) => void
 }
 
-const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onNext, onGenerate})=>{
+const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onGenerate})=>{
     const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
+    
     // Funzione per gestire il cambio di stato delle checkbox
     const handleCheckboxChange = (emotion: string) => {
         setSelectedEmotions((prev) =>
@@ -37,11 +38,8 @@ const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onNext, onGene
                 
             </div>
             <div className="flex gap-6">
-                <Button 
-                    text="Back"
-                    onClick={onNext}>
-                </Button>
-                <Button text="Generate" isDisable={selectedEmotions.length<1} onClick={()=>onGenerate(selectedEmotions)}></Button>
+                <Button path="/choose-category" text="Back"/>
+                <Button path="/result-generate" text="Generate" isDisable={selectedEmotions.length<1} onClick={()=>onGenerate(selectedEmotions)} />            
             </div>
         </div>
     )
