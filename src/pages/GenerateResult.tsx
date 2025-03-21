@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getSpotifyToken } from "../components/utils/spotifyService";
-import { fetchOpenAIPrompt } from "../components/utils/openAIService";
+// import { getSpotifyToken } from "../components/utils/spotifyService";
+// import { fetchOpenAIPrompt } from "../components/utils/openAIService";
 
 interface GenerateResultProps {
     answer: string[];
@@ -12,9 +12,9 @@ const GenerateResult: React.FC<GenerateResultProps> = ({ answer }) => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                console.log(getSpotifyToken);
-                const promptResponse = await fetchOpenAIPrompt(answer) || [];
-                setSongs(Array.isArray(promptResponse) ? promptResponse : []);
+                // console.log(getSpotifyToken);
+                // const promptResponse = await fetchOpenAIPrompt(answer) || [];
+                // setSongs(Array.isArray(promptResponse) ? promptResponse : []);
             } catch (error) {
                 console.error("Error fetching songs:", error);
                 setSongs([]);
