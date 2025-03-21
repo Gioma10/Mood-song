@@ -14,7 +14,7 @@ interface AnswerObject {
 
 function App() {
   const [categories, setCategories] = useState<{ title: string; active: boolean; emotions: string[] }[]>(ANSWERQUESTIONS);
-  const [answer, setAnswer] = useState<AnswerObject>();
+  const [answer, setAnswer] = useState<AnswerObject>({emotions: [], songsQuantity: ''});
   
       // Selezione categoria
       const handleSelectCategory = (index: number) => {

@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
-import { getSpotifyToken } from "../components/utils/spotifyService"; // Assicurati che il percorso sia corretto
-=======
-import { useEffect, useState } from "react";
-// import { getSpotifyToken } from "../components/utils/spotifyService";
-// import { fetchOpenAIPrompt } from "../components/utils/openAIService";
->>>>>>> pages
+import { getSpotifyToken } from "../utils/spotifyService"; // Assicurati che il percorso sia corretto
 
 interface Song {
     id: string;
@@ -18,7 +12,7 @@ interface Song {
 }
 
 interface Props {
-    answer: string[]; // Risultati dell'emozione fornita dall'utente
+    answer: {emotions: string[], songsQuantity: string | number}; // Risultati dell'emozione fornita dall'utente
 }
 
 const GenerateResult: React.FC<Props> = ({ answer }) => {
@@ -29,8 +23,13 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
         const fetchSongs = async () => {
             setLoading(true);
             try {
-<<<<<<< HEAD
-                const token = await getSpotifyToken();
+                // Prepara il parametro da passare a getSpotifyToken
+                const emotionsForSpotify = answer.emotions.map(emotion => ({
+                    name: emotion,  // Puoi mappare l'emozione come 'name'
+                    artist: "" // Puoi lasciarlo vuoto se non ti serve un artista specifico
+                }));
+
+                const token = await getSpotifyToken(emotionsForSpotify);
                 if (!token) {
                     console.error("Token Spotify non ottenuto!");
                     setLoading(false);
@@ -38,12 +37,12 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 }
 
                 // Prompt per cercare canzoni in base all'emozione dell'utente
-                const emotionQuery = answer.join(", "); // Combina le emozioni in una stringa
+                const emotionQuery = answer.emotions.join(", "); // Combina le emozioni in una stringa
                 const searchQuery = `Cerca canzoni che esprimono le emozioni: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
 
                 // Utilizziamo il prompt generato per cercare le canzoni
                 const offset = Math.floor(Math.random() * 100);  // Varia l'offset per "saltare" brani casuali
-                const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=10&offset=${offset}`;
+                const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=${answer.songsQuantity}&offset=${offset}`;
 
                 const response = await fetch(searchUrl, {
                     headers: {
@@ -61,11 +60,6 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 if (data.tracks && data.tracks.items) {
                     setSongsByEmotion(data.tracks.items); // Aggiungi i risultati
                 }
-=======
-                // console.log(getSpotifyToken);
-                // const promptResponse = await fetchOpenAIPrompt(answer) || [];
-                // setSongs(Array.isArray(promptResponse) ? promptResponse : []);
->>>>>>> pages
             } catch (error) {
                 console.error("Errore nel recupero delle canzoni:", error);
             } finally {
@@ -79,7 +73,7 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
     return (
         <div className="h-full w-full mt-40">
             <h2 className="flex text-3xl font-bold mb-6 text-center items-center justify-center">
-                Canzoni in base alle emozioni: {answer.length === 1 ? answer : answer.join(", ")}
+                Canzoni in base alle emozioni: {answer.emotions.length === 1 ? answer.emotions : answer.emotions.join(", ")}
             </h2>
             {loading ? (
                 <p className="text-center text-lg">Caricamento...</p>
