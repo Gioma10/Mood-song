@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./layout/RootLayout";
 import Home from "./pages/Home";
@@ -16,6 +16,12 @@ function App() {
   const [categories, setCategories] = useState<{ title: string; active: boolean; emotions: string[] }[]>(ANSWERQUESTIONS);
   const [answer, setAnswer] = useState<AnswerObject>({emotions: [], songsQuantity: ''});
 
+  useEffect(() => {
+    const storedAnswer = localStorage.getItem('answer');
+    if (storedAnswer) {
+        setAnswer(JSON.parse(storedAnswer));
+    }
+}, []);
   // Selezione categoria
   const handleSelectCategory = (index: number) => {
       setCategories(prevCategories =>
@@ -32,7 +38,11 @@ function App() {
 
   // Salvataggio emozioni
   const handleGenerate = (selectedEmotions: string[], quantity: string | number) => {
-      setAnswer({emotions: [...selectedEmotions], songsQuantity: quantity});
+    const newAnswer = { emotions: [...selectedEmotions], songsQuantity: quantity };
+    setAnswer(newAnswer);
+
+    // Salva nel localStorage
+    localStorage.setItem('answer', JSON.stringify(newAnswer));
   };
 
   console.log(answer);
