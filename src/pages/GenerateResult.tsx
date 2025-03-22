@@ -7,8 +7,8 @@ interface Song {
     artists: { name: string }[];
     external_urls: { spotify: string };
     album: {
-        images: { url: string }[];
-    }
+        images: { url: string }[]; // Aggiungiamo il tipo per le immagini dell'album
+    };
 }
 
 interface Props {
@@ -65,20 +65,20 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
     }, [answer]);
 
     return (
-        <div className="h-full w-full mt-40">
+        <div className="h-full w-full mt-30">
             <h2 className="flex text-3xl font-bold mb-6 text-center items-center justify-center">
                 Canzoni in base alle emozioni: {answer.length === 1 ? answer : answer.join(", ")}
             </h2>
             {loading ? (
                 <p className="text-center text-lg">Caricamento...</p>
             ) : (
-                <div className="pl-10 pr-10 pb-20">
-                    <div className="flex justify-center items-center flex-wrap">
+                <div className="border pl-10 pr-10">
+                    <div className="space-y-8 flex justify-center items-center flex-wrap border">
                         {songsByEmotion.length > 0 ? (
                             songsByEmotion.map((song) => (
-                                <div key={song.id} className="flex p-4 rounded-lg shadow-md bg-[#1b1b1b] w-[30%] m-2">
-                                    <div className="flex-1 flex flex-col justify-between">
-                                        <h4 className="font-medium text-lg">{song.name}</h4>
+                                <div key={song.id} className="flex p-4 rounded-lg shadow-md bg-[#1b1b1b] w-full">
+                                    <div className="flex-1">
+                                        <h4 className="font-semibold text-lg">{song.name}</h4>
                                         <p className="text-sm text-gray-400">
                                             {song.artists.map((artist) => artist.name).join(", ")}
                                         </p>
