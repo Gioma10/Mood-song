@@ -12,7 +12,7 @@ interface Song {
 }
 
 interface Props {
-    answer: {emotions: string[], songsQuantity: string | number}; // Risultati dell'emozione fornita dall'utente
+    answer: { emotions: string[], songsQuantity: string | number }; // Risultati dell'emozione fornita dall'utente
 }
 
 const GenerateResult: React.FC<Props> = ({ answer }) => {
@@ -37,8 +37,9 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 }
 
                 // Prompt per cercare canzoni in base all'emozione dell'utente
+                // console.log(emotionQuery);
                 const emotionQuery = answer.emotions.join(", "); // Combina le emozioni in una stringa
-                const searchQuery = `Cerca canzoni che esprimono le emozioni: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
+                const searchQuery = `Find songs that express emotions: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
 
                 // Utilizziamo il prompt generato per cercare le canzoni
                 const offset = Math.floor(Math.random() * 100);  // Varia l'offset per "saltare" brani casuali
