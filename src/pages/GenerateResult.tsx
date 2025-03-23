@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getSpotifyToken } from "../utils/spotifyService"; // Assicurati che il percorso sia corretto
+import Loading from "../components/Loading";
 
 interface Song {
     id: string;
@@ -19,12 +20,13 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
     const [songsByEmotion, setSongsByEmotion] = useState<Song[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
+
     // Effetto per caricare le canzoni dal localStorage al primo caricamento della pagina
     useEffect(() => {
         const storedSongs = localStorage.getItem('songsByEmotion');
         if (storedSongs) {
             setSongsByEmotion(JSON.parse(storedSongs)); // Imposta le canzoni dallo storage
-            setLoading(false); // Aggiungi un flag di caricamento falso perché sono già disponibili
+            setTimeout(()=>setLoading(false), 8000); // Aggiungi un flag di caricamento falso perché sono già disponibili
         }
     }, []);
 
@@ -42,7 +44,7 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 const token = await getSpotifyToken(emotionsForSpotify);
                 if (!token) {
                     console.error("Token Spotify non ottenuto!");
-                    setLoading(false);
+                    setTimeout(()=>setLoading(false), 8000);
                     return;
                 }
 
@@ -77,7 +79,7 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
             } catch (error) {
                 console.error("Errore nel recupero delle canzoni:", error);
             } finally {
-                setLoading(false);
+                setTimeout(()=>setLoading(false), 8000);
             }
         };
 
@@ -88,15 +90,18 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
     }, [answer, songsByEmotion.length]); // La dipendenza di songsByEmotion.length assicura che non venga eseguito più di una volta
 
     return (
-        <div className="h-full w-full mt-30">
-            <h2 className="flex text-3xl font-bold mb-6 text-center items-center justify-center">
-                Canzoni in base alle emozioni: {answer.emotions.length === 1 ? answer.emotions : answer.emotions.join(", ")}
-            </h2>
+        <>
             {loading ? (
-                <p className="text-center text-lg">Caricamento...</p>
-            ) : (
-                <div className="border pl-10 pr-10">
-                    <div className="space-y-8 flex justify-center items-center flex-wrap border">
+                <Loading />
+            ) 
+            : 
+            (
+            <div className="h-full w-full mt-30">
+                <h2 className="mt-10 flex text-3xl font-bold mb-6 text-center items-center justify-center">
+                    Canzoni in base alle emozioni: {answer.emotions.length === 1 ? answer.emotions : answer.emotions.join(", ")}
+                </h2>
+                <div className="pl-10 pr-10">
+                    <div className="space-y-8 flex justify-center items-center flex-wrap">
                         {songsByEmotion.length > 0 ? (
                             songsByEmotion.map((song) => (
                                 <div key={song.id} className="flex p-4 rounded-lg shadow-md bg-[#1b1b1b] w-full">
@@ -128,8 +133,9 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                         )}
                     </div>
                 </div>
+            </div>
             )}
-        </div>
+        </>
     );
 };
 
