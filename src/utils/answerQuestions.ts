@@ -10,29 +10,31 @@ export const ANSWERQUESTIONS: AnswerQuestions[]= [
         active: false,
         emotions: [
             'Happy',
-            'Energico',
-            'Chill',
-            'Romantico',
-            'Ispirato',
+            'Cheerful',
+            'Excited',
+            'Calm',
+            'Grateful'
         ]
     },
     {
         title: 'negativy', 
         active: false,
         emotions: [
+            'Angry',
             'Sad',
-            'Ansioso',
-            'Nostalgico',
-            'Addolorato'
+            'Frustrated',
+            'Anxious',
+            'Lonely',
         ]
     },
     {
         title: 'neutral', 
         active: false,
         emotions: [
-            'Focus',
-            'Nostalgico',
-            'Neutro',
+            'Relaxed',
+            'Neutral',
+            'Curious',
+            'Tired',
         ]
     },
     

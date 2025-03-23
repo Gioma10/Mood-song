@@ -47,7 +47,7 @@ function App() {
     localStorage.setItem('answer', JSON.stringify(newAnswer));
   };
 
-  console.log(answer);
+  // console.log(answer);
 
   return (
     <Router>
