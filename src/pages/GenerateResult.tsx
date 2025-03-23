@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import { getSpotifyToken } from "../utils/spotifyService"; // Assicurati che il percorso sia corretto
 import Loading from "../components/Loading";
 
-interface Song {
+interface Playlist {
     id: string;
     name: string;
-    artists: { name: string }[];
     external_urls: { spotify: string };
-    album: {
-        images: { url: string }[]; // Aggiungiamo il tipo per le immagini dell'album
-    };
+    images: { url: string }[];
 }
 
 interface Props {
@@ -17,7 +14,7 @@ interface Props {
 }
 
 const GenerateResult: React.FC<Props> = ({ answer }) => {
-    const [songsByEmotion, setSongsByEmotion] = useState<Song[]>([]);
+    const [songsByEmotion, setSongsByEmotion] = useState<Playlist[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
 
@@ -50,13 +47,13 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
 
                 // Prompt per cercare canzoni in base all'emozione dell'utente
                 const emotionQuery = answer.emotions.join(", "); // Combina le emozioni in una stringa
-                const searchQuery = `Find songs that express these emotions: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
+                const searchQuery = `Find playlist with  ${emotionQuery} title. Restituisci la playlist`;
 
                 // Utilizziamo il prompt generato per cercare le canzoni
                 const offset = Math.floor(Math.random() * 1000);  // Varia l'offset per "saltare" brani casuali
                 const limit = Math.min(Number(answer.songsQuantity), 100 ); // Limita il numero di canzoni richieste a 50
 
-                const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=${limit}&offset=${offset}`;
+                const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=playlist&limit=${limit}&offset=${offset}`;
 
                 const response = await fetch(searchUrl, {
                     headers: {
@@ -71,10 +68,9 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
 
                 const data = await response.json();
 
-                if (data.tracks && data.tracks.items) {
-                    setSongsByEmotion(data.tracks.items); // Aggiungi i risultati
-                    // Salva le canzoni nel localStorage
-                    localStorage.setItem('songsByEmotion', JSON.stringify(data.tracks.items));
+                if (data.playlists && data.playlists.items) {
+                    setSongsByEmotion(data.playlists.items);
+                    localStorage.setItem('songsByEmotion', JSON.stringify(data.playlists.items));
                 }
             } catch (error) {
                 console.error("Errore nel recupero delle canzoni:", error);
@@ -103,26 +99,23 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 <div className="pl-10 pr-10">
                     <div className="space-y-8 flex justify-center items-center flex-wrap">
                         {songsByEmotion.length > 0 ? (
-                            songsByEmotion.map((song) => (
-                                <div key={song.id} className="flex p-4 rounded-lg shadow-md bg-[#1b1b1b] w-full">
+                            songsByEmotion.map((playlist) => (
+                                <div key={playlist.id} className="flex p-4 rounded-lg shadow-md bg-[#1b1b1b] w-full">
                                     <div className="flex-1">
-                                        <h4 className="font-semibold text-lg">{song.name}</h4>
-                                        <p className="text-sm text-gray-400">
-                                            {song.artists.map((artist) => artist.name).join(", ")}
-                                        </p>
+                                        <h4 className="font-semibold text-lg">{playlist.name}</h4>
                                         <a
-                                            href={song.external_urls.spotify}
+                                            href={playlist.external_urls.spotify}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-purple-500 hover:text-purple-600 block mt-2 hover:underline"
                                         >
-                                            Ascolta su Spotify
+                                            Apri la playlist su Spotify
                                         </a>
                                     </div>
                                     <div className="ml-4">
                                         <img
-                                            src={song.album.images[0]?.url}
-                                            alt={song.name}
+                                            src={playlist.images[0]?.url}
+                                            alt={playlist.name}
                                             className="w-32 h-32 object-cover rounded-lg"
                                         />
                                     </div>

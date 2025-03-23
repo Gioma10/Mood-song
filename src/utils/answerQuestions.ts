@@ -10,10 +10,7 @@ export const ANSWERQUESTIONS: AnswerQuestions[]= [
         active: false,
         emotions: [
             'Happy',
-            'Cheerful',
-            'Excited',
-            'Calm',
-            'Grateful'
+            'Motivated',
         ]
     },
     {
@@ -22,19 +19,15 @@ export const ANSWERQUESTIONS: AnswerQuestions[]= [
         emotions: [
             'Angry',
             'Sad',
-            'Frustrated',
-            'Anxious',
-            'Lonely',
+            'Tired',
         ]
     },
     {
         title: 'neutral', 
         active: false,
         emotions: [
-            'Relaxed',
-            'Neutral',
-            'Curious',
-            'Tired',
+            'Calm',
+            'Bored',
         ]
     },
     

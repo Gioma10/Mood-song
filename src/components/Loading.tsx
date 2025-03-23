@@ -5,11 +5,11 @@ const Loading: React.FC = () => {
   const [index, setIndex] = useState<number>(0);
   const emoji: {emoji:string, color: string }[] = [
     { emoji: "😊", color: "#FFEB3B"},
-    { emoji: "😡", color: "#F44336"},
     { emoji: "😈", color: "#9C27B0"},
-    { emoji: "🙂", color: "#2196F3"},
+    { emoji: "😡", color: "#F44336"},
+    { emoji: "😞", color: "#2196F3"},
     { emoji: "😩", color: "#BDBDBD"},
-    { emoji: "😏", color: "#FF5722"},
+    { emoji: "😌", color: "#FF5722"},
     { emoji: "🥱", color: "#81C784"},
 ];
 
