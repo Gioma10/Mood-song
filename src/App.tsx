@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import ChooseEmotions from "./pages/ChooseEmotions";
 import ChooseCategory from "./pages/ChooseCategory";
 import GenerateResult from "./pages/GenerateResult";
+import MadeBy from "./pages/MadeBy";
 import { ANSWERQUESTIONS } from "./utils/answerQuestions";
 
 interface AnswerObject {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/choose-category" element={<ChooseCategory disableBtn={!isSelected} onSelectCategory={handleSelectCategory} categories={categories}  />} />
           {selectedCategory && <Route path="/choose-emotions" element={<ChooseEmotions onGenerate={handleGenerate} emotions={selectedCategory.emotions}/>} />}
           <Route path="/result-generate" element={<GenerateResult answer={answer}/>} />
+          <Route path="/made-by" element={<MadeBy />} />
         </Route>
       </Routes>
     </Router>
