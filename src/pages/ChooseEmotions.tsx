@@ -4,7 +4,6 @@ import Button from "../components/Button";
 
 interface ChooseEmotionsProps{
     emotions: string[] ,
-    // onNext: ()=> void,
     onGenerate: (selectedEmotions:string[], songsQuantity: string | number) => void
 }
 

@@ -12,13 +12,23 @@ interface Song {
 }
 
 interface Props {
-    answer: {emotions: string[], songsQuantity: string | number}; // Risultati dell'emozione fornita dall'utente
+    answer: { emotions: string[], songsQuantity: string | number }; // Risultati dell'emozione fornita dall'utente
 }
 
 const GenerateResult: React.FC<Props> = ({ answer }) => {
     const [songsByEmotion, setSongsByEmotion] = useState<Song[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
+    // Effetto per caricare le canzoni dal localStorage al primo caricamento della pagina
+    useEffect(() => {
+        const storedSongs = localStorage.getItem('songsByEmotion');
+        if (storedSongs) {
+            setSongsByEmotion(JSON.parse(storedSongs)); // Imposta le canzoni dallo storage
+            setLoading(false); // Aggiungi un flag di caricamento falso perché sono già disponibili
+        }
+    }, []);
+
+    // Effetto per recuperare nuove canzoni da Spotify se non sono già presenti
     useEffect(() => {
         const fetchSongs = async () => {
             setLoading(true);
@@ -38,11 +48,13 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
 
                 // Prompt per cercare canzoni in base all'emozione dell'utente
                 const emotionQuery = answer.emotions.join(", "); // Combina le emozioni in una stringa
-                const searchQuery = `Cerca canzoni che esprimono le emozioni: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
+                const searchQuery = `Find songs that express these emotions: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
 
                 // Utilizziamo il prompt generato per cercare le canzoni
                 const offset = Math.floor(Math.random() * 100);  // Varia l'offset per "saltare" brani casuali
-                const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=${answer.songsQuantity}&offset=${offset}`;
+                const limit = Math.min(Number(answer.songsQuantity), 50); // Limita il numero di canzoni richieste a 50
+
+                const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=${limit}&offset=${offset}`;
 
                 const response = await fetch(searchUrl, {
                     headers: {
@@ -59,6 +71,8 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
 
                 if (data.tracks && data.tracks.items) {
                     setSongsByEmotion(data.tracks.items); // Aggiungi i risultati
+                    // Salva le canzoni nel localStorage
+                    localStorage.setItem('songsByEmotion', JSON.stringify(data.tracks.items));
                 }
             } catch (error) {
                 console.error("Errore nel recupero delle canzoni:", error);
@@ -67,8 +81,11 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
             }
         };
 
-        fetchSongs();
-    }, [answer]);
+        // Se le canzoni non sono già nel localStorage, recuperale da Spotify
+        if (songsByEmotion.length === 0) {
+            fetchSongs();
+        }
+    }, [answer, songsByEmotion.length]); // La dipendenza di songsByEmotion.length assicura che non venga eseguito più di una volta
 
     return (
         <div className="h-full w-full mt-30">
