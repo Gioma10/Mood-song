@@ -51,8 +51,8 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                 const searchQuery = `Find songs that express these emotions: ${emotionQuery}. Restituisci i titoli delle canzoni e gli artisti.`;
 
                 // Utilizziamo il prompt generato per cercare le canzoni
-                const offset = Math.floor(Math.random() * 100);  // Varia l'offset per "saltare" brani casuali
-                const limit = Math.min(Number(answer.songsQuantity), 50); // Limita il numero di canzoni richieste a 50
+                const offset = Math.floor(Math.random() * 1000);  // Varia l'offset per "saltare" brani casuali
+                const limit = Math.min(Number(answer.songsQuantity), 100 ); // Limita il numero di canzoni richieste a 50
 
                 const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=${limit}&offset=${offset}`;
 
