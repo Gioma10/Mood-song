@@ -4,7 +4,7 @@ import LinkedinLogo from "../img/linkedinLogo.png"
 const MadeBy = () => {
 
     return (
-        <div className="h-screen w-screen mt-40">
+        <div className="h-screen w-screen pt-30">
             <h1 className="w-[200px] text-center m-auto text-5xl">Made By</h1>
             <div className="h-screen flex justify-between mt-20 ml-7 mr-7">
                 <div className="h-96 w-96 bg-purple-500 rounded-3xl text-center hover:translate-x-6 transform transition duration-300">
