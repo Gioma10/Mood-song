@@ -1,7 +1,7 @@
 interface AnswerQuestions{
     title: string,
     active: boolean,
-    emotions: string[],
+    emotions: {emotion: string, color: string}[],
 }
 
 export const ANSWERQUESTIONS: AnswerQuestions[]= [
@@ -9,25 +9,25 @@ export const ANSWERQUESTIONS: AnswerQuestions[]= [
         title: 'positivy', 
         active: false,
         emotions: [
-            'Happy',
-            'Motivated',
+            {emotion: 'Happy', color: "#FFEB3B"},
+            {emotion: 'Motivated', color: "#9C27B0"}
         ]
     },
     {
         title: 'negativy', 
         active: false,
         emotions: [
-            'Angry',
-            'Sad',
-            'Tired',
+            {emotion: 'Angry', color: "#F44336"},
+            {emotion: 'Sad', color: "#2196F3"},
+            {emotion: 'Tired', color: "#BDBDBD"}
         ]
     },
     {
         title: 'neutral', 
         active: false,
         emotions: [
-            'Calm',
-            'Bored',
+            {emotion: 'Calm', color: "#FF5722"},
+            {emotion: 'Bored', color: "#81C784"}
         ]
     },
     
