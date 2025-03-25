@@ -137,7 +137,8 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                                                 </a>
                                                 <div 
                                                 className="text-4xl" 
-                                                onClick={() => handleSelectPlaylist(playlist)}>
+                                                // onClick={() => handleSelectPlaylist(playlist)}
+                                                >
                                                     
                                                     {selectedPlaylists[playlist.id] ? "Selezionato" : "+"}
                                                 </div>

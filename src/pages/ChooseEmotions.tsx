@@ -37,15 +37,6 @@ const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onGenerate})=>
                 <div className="flex justify-center p-10 gap-10">
                         {emotions.map((item, index)=>{
                             return (
-                                // <div key={index} className="flex gap-2">
-                                //     <input 
-                                //         type="checkbox" 
-                                //         checked={selectedEmotions.includes(emotion)}
-                                //         onChange={() => handleCheckboxChange(emotion)}/>
-                                //     <label>
-                                //         {emotion}
-                                //     </label>
-                                // </div>
                                 <div 
                                     key={index} 
                                     className={`shadow ${ selectedEmotions.includes(item.emotion) && `shadow-[${item.color}]`}  cursor-pointer p-4 rounded-2xl w-32`}
