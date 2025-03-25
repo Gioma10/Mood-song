@@ -45,13 +45,13 @@ const GenerateResult: React.FC<Props> = ({ answer }) => {
                     return;
                 }
 
-                // Prompt per cercare canzoni in base all'emozione dell'utente
+                // Prompt per cercare playlist in base all'emozione dell'utente
                 const emotionQuery = answer.emotions.join(", "); // Combina le emozioni in una stringa
-                const searchQuery = `Find playlist with  ${emotionQuery} title. Restituisci la playlist`;
+                const searchQuery = `Find playlist with ${emotionQuery} titles.`;
 
-                // Utilizziamo il prompt generato per cercare le canzoni
+                // Utilizziamo il prompt generato per cercare le playlist
                 const offset = Math.floor(Math.random() * 1000);  // Varia l'offset per "saltare" brani casuali
-                const limit = Math.min(Number(answer.songsQuantity), 100); // Limita il numero di canzoni richieste a 50
+                const limit = Math.min(Number(answer.songsQuantity), 20 ); // Limita il numero di playlist richieste a 20
 
                 const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=playlist&limit=${limit}&offset=${offset}`;
 

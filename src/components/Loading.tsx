@@ -24,7 +24,7 @@ const Loading: React.FC = () => {
     <motion.div 
         animate={{opacity: [0.5,1,0.5]}}
         transition={{duration: 1, repeat:Infinity}}
-        className="flex flex-col items-center justify-center h-screen">
+        className="flex flex-col items-center justify-center h-screen z-10">
             <p className="text-xl mb-4 text-gray-600">Generazione in corso...</p>
 
             <div className="relative w-24 h-24 flex items-center justify-center border-4 border-gray-300 rounded-full overflow-hidden">

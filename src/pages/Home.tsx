@@ -5,7 +5,7 @@ import { ANSWERQUESTIONS } from "../utils/answerQuestions";
 
 
 interface HomeProps{
-    setState: React.Dispatch<React.SetStateAction<{ title: string; active: boolean; emotions: string[] }[]>>
+    setState: React.Dispatch<React.SetStateAction<{ title: string; active: boolean; emotions: {emotion: string, color: string}[] }[]>>
 }
 
 const Home: React.FC<HomeProps> = ({setState})=>{

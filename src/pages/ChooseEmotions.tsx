@@ -3,7 +3,7 @@ import Button from "../components/Button";
 
 
 interface ChooseEmotionsProps{
-    emotions: string[] ,
+    emotions: {emotion: string, color: string}[] ,
     onGenerate: (selectedEmotions:string[], songsQuantity: string | number) => void
 }
 
@@ -12,7 +12,7 @@ const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onGenerate})=>
     const [songsQuantity, setSongsQuantity] = useState<number | string>('')
 
     // Funzione per gestire il cambio di stato delle checkbox
-    const handleCheckboxChange = (emotion: string) => {
+    const handleSelect = (emotion: string) => {
         setSelectedEmotions((prev) =>
             prev.includes(emotion)
                 ? prev.filter((item) => item !== emotion) // Rimuove se già presente
@@ -20,6 +20,8 @@ const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onGenerate})=>
         );
     };
 
+    console.log('emotions', selectedEmotions);
+    
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         setSongsQuantity(Number(event.target.value))
         
@@ -32,17 +34,23 @@ const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onGenerate})=>
         <div className="flex flex-col justify-center items-center gap-20">
                 <h2 className="text-6xl">Choose your Emotions</h2>
             <div className="flex flex-col gap-8">
-                <div className="gap-2 grid grid-cols-2 p-10 border">
-                        {emotions.map((emotion, index)=>{
+                <div className="flex justify-center p-10 gap-10">
+                        {emotions.map((item, index)=>{
                             return (
-                                <div key={index} className="flex gap-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={selectedEmotions.includes(emotion)}
-                                        onChange={() => handleCheckboxChange(emotion)}/>
-                                    <label>
-                                        {emotion}
-                                    </label>
+                                // <div key={index} className="flex gap-2">
+                                //     <input 
+                                //         type="checkbox" 
+                                //         checked={selectedEmotions.includes(emotion)}
+                                //         onChange={() => handleCheckboxChange(emotion)}/>
+                                //     <label>
+                                //         {emotion}
+                                //     </label>
+                                // </div>
+                                <div 
+                                    key={index} 
+                                    className={`shadow ${ selectedEmotions.includes(item.emotion) && `shadow-[${item.color}]`}  cursor-pointer p-4 rounded-2xl w-32`}
+                                    onClick={()=>handleSelect(item.emotion)}>
+                                    <p>{item.emotion}</p>
                                 </div>
                             )
                         })}
