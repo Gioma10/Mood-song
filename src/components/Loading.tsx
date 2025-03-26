@@ -36,7 +36,8 @@ const Loading: React.FC = () => {
                     animate={{y: 0}}
                     exit={{y:100}}
                     transition={{duration:0.7, ease: "easeInOut"}}
-                    className={`bg-[${emoji[index].color}] absolute w-full h-full opacity-50  rounded-full`}/>
+                    className={`absolute w-full h-full opacity-50  rounded-full`}
+                    style={{backgroundColor: emoji[index].color}}/>
                 </AnimatePresence>
 
                 <AnimatePresence mode="wait">
