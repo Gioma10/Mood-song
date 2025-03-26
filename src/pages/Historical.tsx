@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
-import Emotion from "../components/Emotions";
 
 const Historical = () => {
-    // Definiamo il tipo per una playlist
     interface Playlist {
+        id: string;
         name: string;
         images: { url: string }[];
     }
 
-    // Stato per gestire le playlist
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
-    console.log(playlists);
 
-    // Recuperiamo i dati dal localStorage all'avvio
     useEffect(() => {
-        const storedData = localStorage.getItem("songsByEmotion");
+        const storedData = localStorage.getItem("selectedPlaylists");
         if (storedData) {
             try {
-                setPlaylists(JSON.parse(storedData));
+                const parsedPlaylists: Playlist[] = JSON.parse(storedData);
+                setPlaylists(parsedPlaylists.slice(-3)); // Mostra solo le ultime 3
             } catch (error) {
                 console.error("Errore nel parsing dei dati:", error);
-                setPlaylists([]); // Se c'è un errore, usiamo un array vuoto
+                setPlaylists([]);
             }
         }
     }, []);
@@ -36,12 +33,10 @@ const Historical = () => {
                     <div className="flex w-[100%] text-center items-center justify-center">
                         {playlists.length > 0 ? (
                             <ul className="flex justify-around w-[100%]">
-                                {playlists.slice(-3).map((playlist, index) => {
-                                    // Controllo per evitare errori se non ci sono immagini
+                                {playlists.map((playlist) => {
                                     const imageUrl = playlist.images.length > 0 ? playlist.images[0].url : "URL_IMMAGINE_DEFAULT";
-
                                     return (
-                                        <li key={index} className="flex flex-col items-center">
+                                        <li key={playlist.id} className="flex flex-col items-center">
                                             <p>{playlist.name}</p>
                                             <img
                                                 src={imageUrl}
@@ -58,17 +53,8 @@ const Historical = () => {
                     </div>
                 </div>
 
-
                 <div className="p-0 mt-10 text-center">
                     <Button text="Visualizza tutto" path="" />
-                </div>
-            </div>
-
-            <div className="w-[90%] bg-slate-300 h-100 m-auto text-black rounded-3xl mb-56">
-                <h2 className="text-3xl text-center mt-10 pt-10">Canzoni per Emozioni</h2>
-
-                <div className="flex flex-wrap mt-8">
-                    
                 </div>
             </div>
         </div>
