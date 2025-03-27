@@ -39,7 +39,10 @@ const ChooseEmotions: React.FC<ChooseEmotionsProps> = ({emotions, onGenerate})=>
                             return (
                                 <div 
                                     key={index} 
-                                    className={`shadow ${ selectedEmotions.includes(item.emotion) && `shadow-[${item.color}]`}  cursor-pointer p-4 rounded-2xl w-32`}
+                                    className="cursor-pointer p-4 rounded-2xl w-32"
+                                    style={{
+                                        boxShadow: selectedEmotions.includes(item.emotion) ? `0 4px 6px ${item.color}` : undefined
+                                    }}
                                     onClick={()=>handleSelect(item.emotion)}>
                                     <p>{item.emotion}</p>
                                 </div>
