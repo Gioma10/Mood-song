@@ -2,24 +2,24 @@ import { Outlet } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 
-
 const Layout = () => {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-b w-full from-gray-900  to-slate-500"
+      className="min-h-screen w-full"
       style={{
-        backgroundSize: "2000% 2000%",
-        animation: "bg-pan-top 7s infinite",
-        minHeight: '100%'
-      }}>
-
-        {/* Navbar */}
-        <Navbar/>
-        <main className="h-screen flex justify-center items-center">
-          {/* Main */}
-          <Outlet />
-        </main>
+        background: "black",
+        backgroundSize: "200% 200%",
+        animation: "subtle-move 6s ease-in-out infinite",
+        minHeight: "100%",
+      }}
+      >
+            {/* Navbar */}
+            <Navbar/>
+            <main className="min-h-screen flex justify-center items-center">
+              {/* Main */}
+              <Outlet />
+            </main>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Navbar: React.FC = () => {
 
     return (
-        <nav className="fixed w-full flex items-center justify-center">
+        <nav className="fixed z-20 w-full flex items-center justify-center">
             <ul className="rounded-4xl flex justify-center items-center mt-5">
                 <Link to={'/'}>
                     <li className="text-2xl py-2 px-5 cursor-pointer group relative flex justify-center">
