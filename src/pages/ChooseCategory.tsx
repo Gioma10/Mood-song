@@ -11,7 +11,7 @@ const ChooseCategory: React.FC<ChooseCategoryProps> = ({ categories, onSelectCat
 
     return (
         <div className="flex flex-col justify-center items-center gap-24">
-            <h2 className="text-6xl">Choose your Category</h2>
+            <h2 className="text-6xl shadow-dance-text">Choose your Category</h2>
             <div className="flex gap-10">
                 {categories.map((category, index)=>{
                     return (

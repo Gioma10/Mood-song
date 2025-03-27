@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import Button from "../components/Button";
 import { useLocation } from "react-router-dom";
 import { ANSWERQUESTIONS } from "../utils/answerQuestions";
+import Vortex from "../components/ui/Vortex";
+
 
 
 interface HomeProps{
@@ -16,10 +18,14 @@ const Home: React.FC<HomeProps> = ({setState})=>{
 
     },[location.pathname])
     return (
-        <div className="flex flex-col justify-center items-center h-screen gap-12">
-            <h1 className="text-9xl">Mood Song</h1>
-            <Button path="/choose-category" text="Get Started" />
-        </div>
+        <Vortex
+            backgroundColor="black"
+            className="flex flex-col justify-center items-center w-full h-screen gap-12 md:px-10">
+                <h1 className="text-9xl relative w-full text-center font-bold text-white drop-shadow-[0_0_10px_rgba(173,133,255,0.8)] shadow-dance-text">
+                    Mood Song
+                </h1>
+                <Button path="/choose-category" text="Get Started" />
+        </Vortex>
     )
 }
 

@@ -14,16 +14,10 @@ body{
   font-family: paragraph;
 }
 
-@keyframes bg-pan-top {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
+@keyframes subtle-move {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
 }
 
 
@@ -36,5 +30,20 @@ h1, h2{
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+}
+
+.shadow-dance-text {
+  color: #fff;
+  text-shadow: 5px 5px 0 #ea00ff, 10px 10px 0 #8800ff;
+  animation: shadow-dance 2s infinite;
+}
+
+@keyframes shadow-dance {
+  0%, 100% {
+      text-shadow: 5px 5px 0 #ea00ff, 10px 10px 0 #8800ff;
+  }
+  50% {
+      text-shadow: -5px -5px 0 #8800ff, -10px -10px 0 #ea00ff;
   }
 }
