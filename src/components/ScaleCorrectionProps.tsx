@@ -22,7 +22,7 @@ const ScaleCorrection: React.FC<ScaleCorrectionProps> = ({ content }) => {
         setExpanded(!expanded);
         setShowContent(!showContent);
       }}
-      className="relative flex items-center justify-center bg-purple-500 rounded-2xl cursor-pointer border"
+      className="relative flex items-center justify-center bg-purple-500 rounded-2xl cursor-pointer"
       style={{
         width: expanded ? 300 : 100,
         height: expanded ? 400 : 100,
@@ -40,8 +40,8 @@ const ScaleCorrection: React.FC<ScaleCorrectionProps> = ({ content }) => {
           transition={{ duration: 0.5 }}
           className="absolute top-10 text-white text-center px-4"
         >
-          <h2 className="text-xl font-bold">{content.title}</h2>
-          <p className="text-sm mt-2">{content.description}</p>
+          <h2 className="text-3xl font-bold">{content.title}</h2>
+          <p className="text-[13pt] mt-2">{content.description}</p>
 
           <div className="mt-4 flex flex-col items-center">
             {content.socialLinks.map((link, index) => (
@@ -50,9 +50,9 @@ const ScaleCorrection: React.FC<ScaleCorrectionProps> = ({ content }) => {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 mt-2 text-blue-300 hover:underline"
+                className="flex mb-2 items-center gap-2 mt-2 text-blue-300 hover:underline"
               >
-                <img src={link.icon} alt={link.platform} className="w-6 h-6" />
+                <img src={link.icon} alt={link.platform} className="w-6 h-6"/>
                 {link.platform}
               </a>
             ))}
